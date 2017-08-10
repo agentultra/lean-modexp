@@ -1,4 +1,3 @@
-
 import .lib.data.fin
 import .lib.data.list
 import .lib.data.pow
@@ -193,74 +192,5 @@ begin
 end
 
 end version0
-
--- tentative
-namespace version1
-
-local infix ^ := pow
-
-open list
-
-@[reducible]
-def bignum := list word
-
-instance : has_one bignum :=
-⟨ [1] ⟩
-
-def bignum.to_nat : bignum → ℕ :=
-sorry
-
-def trunc_mul (n : ℕ) (p q : bignum) : bignum :=
-sorry
-
-def mod (p q : bignum) : bignum :=
-sorry
-
-def pow_table (ws : ℕ) (p : bignum) : ℕ → bignum
- | 0 := 1
- | (nat.succ n) := trunc_mul ws p (pow_table n)
-
-def win_pow (ws : ℕ) : bignum → bignum :=
-nat.repeat (λ _ p, trunc_mul ws p p) window_size
-
-def expmod (p : bignum) (e : list window) (m : bignum) : bignum :=
-let ws := m.length, -- `word size` of the modulus
-    pow_t : array  bignum win_vals := array.mk (λ i, pow_table ws p i.val) in
-mod (e.reverse.foldl (λ r w, trunc_mul ws (win_pow ws r) (pow_t.read w)) 1) m
-
-theorem expmod_def (p : bignum) (e : list window) (m : bignum)
-: (expmod p e m).to_nat = p.to_nat ^ e.to_nat % m.to_nat :=
-sorry
-
--- def breakup : word → list window :=
--- sorry
-
--- -- return `window_size` sized windows from the most significant to the least
--- def windows (p : bignum) : list window :=
--- p.data.rev_list.bind breakup
-
--- def from_windows (ws : list window) : bignum :=
--- sorry
-
--- @[simp]
--- lemma from_windows_nil
--- : from_windows nil = 0 :=
--- sorry
-
--- @[simp]
--- lemma to_nat_zero
--- : bignum.to_nat 0 = 0 :=
--- sorry
-
--- lemma windows_eq_nil_imp_self_eq_zero {p : bignum}
---   (h : windows p = nil)
--- : p.to_nat = 0 :=
--- sorry
-
--- lemma to_nat_from_windows_windows_eq_to_nat_self {p : bignum}
--- : (from_windows (windows p)).to_nat = p.to_nat :=
--- sorry
-
-end version1
 
 end mod_group
